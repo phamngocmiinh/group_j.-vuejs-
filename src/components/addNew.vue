@@ -40,8 +40,6 @@ export default {
   data() {
     return {
       previewImage: null,
-      DatePickerFormat: "dd/MM/yyyy",
-      date: employee.date
     };
   },
   props: {

@@ -6,15 +6,15 @@
         <div class="search">
           <input
             v-model="search"
-            class="form-control my-0 py-1 lime-border"
+            class="form-control my-0 py-1"
             type="text"
             placeholder="Search"
             aria-label="Search"
           />
         </div>
         <div class="addnew">
-          <button type="button" class="btn btn-primary" @click="clickAdd()">
-            Add New
+          <button type="button" class="btn btn-add-new" @click="clickAdd()">
+            NEW TODO
           </button>
         </div>
       </div>
@@ -37,22 +37,43 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="items in searchName" :key="items.id">
-            <td>{{ items.title }}</td>
-            <td>{{ items.description }}</td>
-            <td>{{ items.date }}</td>
+          <tr v-for="item in paginate" :key="item.id">
+            <td
+              @click="toggleTodo(item)"
+              :class="{
+                done: item.completed
+              }"
+            >
+              {{ item.title }}
+            </td>
+            <td
+              @click="toggleTodo(item)"
+              :class="{
+                done: item.completed
+              }"
+            >
+              {{ item.description }}
+            </td>
+            <td
+              @click="toggleTodo(item)"
+              :class="{
+                done: item.completed
+              }"
+            >
+              {{ item.date }}
+            </td>
             <td>
               <button
                 type="button"
                 class="btn btn-danger"
-                @click="clickEdit(items)"
+                @click="clickEdit(item)"
               >
                 Edit
               </button>
               <button
                 type="button"
                 class="btn btn-success"
-                @click="clickDelete(items)"
+                @click="clickDelete(item)"
               >
                 Delete
               </button>
@@ -60,6 +81,23 @@
           </tr>
         </tbody>
       </table>
+      <ul>
+        <li v-for="pageNumber in totalPages" v-bind:key="pageNumber">
+          <a
+            v-bind:key="pageNumber"
+            href="#"
+            @click="setPage(pageNumber)"
+            :class="{
+              current: currentPage === pageNumber,
+              last:
+                pageNumber == totalPages &&
+                Math.abs(pageNumber - currentPage) > 3,
+              first: pageNumber == 1 && Math.abs(pageNumber - currentPage) > 3
+            }"
+            >{{ pageNumber }}</a
+          >
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -79,18 +117,21 @@ export default {
           id: 1,
           title: "Do the dishes",
           description: "Bruschetta- famous appetizer in Italy",
+          completed: false,
           date: "Mon Nov 02 2020 17:59:00 GMT+0700 (Giờ Đông Dương)"
         },
         {
           id: 2,
           title: "Take out the trash",
           description: "I take out the garbage",
+          completed: false,
           date: "	Sun Nov 01 2020 17:59:00 GMT+0700 (Giờ Đông Dương)"
         },
         {
           id: 3,
           title: "Finish doing laundry",
           description: "Therefore, you need to add water.",
+          completed: false,
           date: "	Wed Nov 04 2020 18:00:00 GMT+0700 (Giờ Đông Dương)"
         }
       ],
@@ -100,7 +141,10 @@ export default {
       array: [],
       cats: [],
       currentSort: "title",
-      currentSortDir: "asc"
+      currentSortDir: "asc",
+      currentPage: 1,
+      itemsPerPage: 3,
+      resultCount: 1
     };
   },
   computed: {
@@ -126,6 +170,23 @@ export default {
         if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
         return 0;
       });
+    },
+    totalPages: function() {
+      return Math.ceil(this.resultCount / this.itemsPerPage);
+    },
+    paginate: function() {
+      if (
+        !this.searchName ||
+        this.searchName.length != this.searchName.length
+      ) {
+        return;
+      }
+      this.resultCount = this.searchName.length;
+      if (this.currentPage >= this.totalPages) {
+        this.currentPage = this.totalPages;
+      }
+      var index = this.currentPage * this.itemsPerPage - this.itemsPerPage;
+      return this.searchName.slice(index, index + this.itemsPerPage);
     }
   },
   components: {
@@ -138,6 +199,7 @@ export default {
         id: Math.floor(Math.random() * 1000000),
         title: "",
         description: "",
+        completed: false,
         date: ""
       };
       this.employee = employee;
@@ -168,6 +230,12 @@ export default {
         console.log(this.currentSortDir);
       }
       this.currentSort = s;
+    },
+    setPage: function(pageNumber) {
+      this.currentPage = pageNumber;
+    },
+    toggleTodo(todo) {
+      todo.completed = !todo.completed;
     }
   }
 };
@@ -192,31 +260,29 @@ export default {
 }
 
 .input-group.md-form.form-sm.form-1 input {
-  border: 1px solid #bdbdbd;
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
 }
 .input-group.md-form.form-sm.form-2 input {
-  border: 1px solid #bdbdbd;
   border-top-left-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
+  background-color: #7093f3;
 }
 
-.input-group.md-form.form-sm.form-2 input.lime-border {
-  border: 1px solid #cddc39;
-}
-.input-group.md-form.form-sm.form-2 input.amber-border {
-  border: 1px solid #ffca28;
-}
 .input-group {
   margin-bottom: 10px;
   border-radius: 7px;
-  background-color: cadetblue;
+  background-color: #7093f3;
   padding: 5px;
+}
+.btn-add-new {
+  background-color: #fff;
+  color: #000;
 }
 .table {
   border-style: solid;
-  border-color: cadetblue;
+  border-color: #7093f3;
+  cursor: pointer;
 }
 .img {
   width: 50%;
@@ -233,5 +299,8 @@ export default {
 .title {
   font-size: 25px;
   margin: 20px;
+}
+.done {
+  text-decoration: line-through;
 }
 </style>

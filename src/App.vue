@@ -68,14 +68,15 @@
             <td>
               <button
                 type="button"
-                class="btn btn-danger"
+                class="btn btn-warning"
                 @click="clickEdit(item)"
               >
                 Edit
               </button>
+
               <button
                 type="button"
-                class="btn btn-success"
+                class="btn btn-danger"
                 @click="clickDelete(item)"
               >
                 Delete
@@ -115,6 +116,7 @@ export default {
   name: "App",
   data() {
     return {
+      isDelete: "",
       selec: "example1",
       Example: "hello",
       list: [
@@ -207,9 +209,9 @@ export default {
       this.isEdit = true;
     },
     clickSave(employee) {
-      let index = this.list.findIndex(items => items.id == employee.id);
-      if (index >= 0) {
-        this.list.splice(index, 1, employee);
+      let index = this.list.findIndex(items => items.id == employee.id); // Tìm trong mảng list công việc được truyền vào có tồn tại chưa                                                               // chưa thông qua id
+      if (index >= 0) {                                                  // Nếu tồn tại rồi => Sửa công việc đó 
+        this.list.splice(index, 1, employee);                            // Nếu chưa tồn tại => Dùng arr.push để thêm mảng list
       } else {
         this.list.push(employee);
       }
@@ -221,8 +223,33 @@ export default {
       this.isEdit = true;
     },
     clickDelete(employee) {
-      let index = this.list.findIndex(items => items.id == employee.id);
-      this.list.splice(index, 1);
+      (this.isDelete = ""),
+      // Khởi tạo Dialog
+        this.$bvModal
+          .msgBoxConfirm("Bạn có muốn xóa?", {
+            title: "Please Confirm",
+            size: "md",
+            buttonSize: "md",
+            okVariant: "outline-danger",
+            okTitle: "YES",
+            cancelTitle: "NO",
+            cancelVariant:"outline-primary",
+            footerClass: "p-2",
+            hideHeaderClose: false,
+            centered: true
+          })
+          // Giá trị trả về. YES tương ứng = true , NO tương ứng = false.
+          .then(value => {
+            this.isDelete = value;
+            // Nếu giá trị trả về true thì xóa công việc đó ra khỏi mảng.
+            if (this.isDelete === true) {
+              let index = this.list.findIndex(items => items.id == employee.id);
+              this.list.splice(index, 1);
+            }
+          })
+          .catch(err => {
+            // An error occurred
+          });
     },
     sort: function(s) {
       //if s == current sort, reverse

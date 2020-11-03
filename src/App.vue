@@ -294,7 +294,6 @@ export default {
 }
 .search {
   margin: 20px;
-  margin-left: -5px;
   width: 72%;
 }
 .title {
@@ -320,15 +319,15 @@ a{
       color: #000;
 }
 .item-title {
-  width: 200px;
+  width: 20%;
   word-break: break-all;
 }
 .item-desc {
-  width: 500px;
+  width: 30%;
   word-break: break-all;
 }
 .item-date {
-  width: 450px;
+  width: 35%;
   word-break: break-all;
 }
 </style>

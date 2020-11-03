@@ -226,7 +226,7 @@ export default {
       (this.isDelete = ""),
       // Khởi tạo Dialog
         this.$bvModal
-          .msgBoxConfirm("Bạn có muốn xóa?", {
+          .msgBoxConfirm("Are you sure you want to delete?", {
             title: "Please Confirm",
             size: "md",
             buttonSize: "md",

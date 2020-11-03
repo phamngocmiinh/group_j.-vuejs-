@@ -39,6 +39,7 @@
         <tbody>
           <tr v-for="item in paginate" :key="item.id">
             <td
+            class="item-title"
               @click="toggleTodo(item)"
               :class="{
                 done: item.completed
@@ -47,6 +48,7 @@
               {{ item.title }}
             </td>
             <td
+            class="item-desc"
               @click="toggleTodo(item)"
               :class="{
                 done: item.completed
@@ -55,6 +57,7 @@
               {{ item.description }}
             </td>
             <td
+            class="item-date"
               @click="toggleTodo(item)"
               :class="{
                 done: item.completed
@@ -155,11 +158,7 @@ export default {
         this.sortedCats &&
         this.list.filter(items => {
           return (
-            items.title.toLowerCase().includes(this.search.toLowerCase()) ||
-            items.description
-              .toLowerCase()
-              .includes(this.search.toLowerCase()) ||
-            items.date.toLowerCase().includes(this.search.toLowerCase())
+            items.title.toLowerCase().includes(this.search.toLowerCase())
           );
         })
       );
@@ -311,13 +310,25 @@ ul{
     justify-content: center
 }
 li{
-  padding: 12px;
-    background-color: burlywood;
+  padding: 8px 15px;
+    background-color: #7093f3;
     border-radius: 5px;
     margin-right: 5px;
 }
 a{
       text-decoration: none !important;
       color: #000;
+}
+.item-title {
+  width: 200px;
+  word-break: break-all;
+}
+.item-desc {
+  width: 500px;
+  word-break: break-all;
+}
+.item-date {
+  width: 450px;
+  word-break: break-all;
 }
 </style>

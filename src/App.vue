@@ -81,6 +81,7 @@
           </tr>
         </tbody>
       </table>
+      <div class="page">
       <ul>
         <li v-for="pageNumber in totalPages" v-bind:key="pageNumber">
           <a
@@ -98,6 +99,7 @@
           >
         </li>
       </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -294,7 +296,7 @@ export default {
 .search {
   margin: 20px;
   margin-left: -5px;
-  width: 75%;
+  width: 72%;
 }
 .title {
   font-size: 25px;
@@ -302,5 +304,20 @@ export default {
 }
 .done {
   text-decoration: line-through;
+}
+ul{
+  list-style: none;
+    display: flex;
+    justify-content: center
+}
+li{
+  padding: 12px;
+    background-color: burlywood;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+a{
+      text-decoration: none !important;
+      color: #000;
 }
 </style>
